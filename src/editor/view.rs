@@ -1,5 +1,7 @@
 use super::terminal::{Size, Terminal};
 use std::io::Error;
+mod buffer;
+use buffer::Buffer;
 const NAME: &str = env!("CARGO_PKG_NAME");
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const EDITION: &str =
@@ -8,15 +10,20 @@ const EDITION: &str =
         None => "unknown",
     };
 
+#[derive(Default)]
 pub struct View {
-
+    buffer: Buffer
 }
 
 impl View {
-    pub fn render() -> Result<(), Error>{
+    pub fn render(&self) -> Result<(), Error> {
         let Size { height, .. } = Terminal::size()?;
         for current_row in 0..height {
             Terminal::clear_line()?;
+             if let Some(line) = self.buffer.lines.get(current_row) {
+                Terminal::print(line)?;
+                Terminal::print("\r\n")?;
+             }
             // we allow this since we don't care if our welcome message is put _exactly_ in the middle.
             // it's allowed to be a bit up or down
             #[allow(clippy::integer_division)]
