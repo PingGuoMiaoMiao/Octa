@@ -11,7 +11,7 @@ use std::io::{stdout, Error, Write};
 /// And should you attempt to set the caret out of these bounds, it will also be truncated.
 pub struct Terminal {}
 
-#[derive(Clone, Copy)]
+#[derive(Default,Clone, Copy)]
 pub struct Size{
     pub height: usize,
     pub width: usize,
